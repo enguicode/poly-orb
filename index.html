@@ -112,9 +112,9 @@
   }
   .shell.fullscreen-hold .fs-bar { display: flex; }
   .shell.fullscreen-hold .stage-badge { display: none; }
-  .fs-bar { max-width: calc(100% - 24px); }
-  .fs-bar > * { white-space: nowrap; flex-shrink: 0; }
-  .fs-bar > #fsLabel { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .fs-bar { width: max-content; max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center; border-radius: 22px; padding: 9px 10px; }
+  .fs-bar > * { white-space: nowrap; }
+  .fs-bar > #fsLabel { flex-basis: 100%; text-align: center; white-space: normal; overflow-wrap: anywhere; padding: 2px 4px 4px; }
   .lab-left { display: flex; flex-direction: column; flex-shrink: 0; }
   .mono { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 8.8px; }
 
@@ -222,6 +222,7 @@
   .st-btn.on { border-color: var(--sc); background: color-mix(in srgb, var(--sc) 20%, transparent); color: var(--sc); font-weight: 700; }
 
   .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .action-row .btn-main { grid-column: 1 / -1; }
   .btn-main {
     padding: 11px; border-radius: 14px; border: none; background: var(--ink); color: #040409;
     font-family: var(--mono); font-weight: 700; font-size: 8.8px; cursor: pointer;
@@ -269,6 +270,7 @@
   <div class="fs-bar">
     <span class="mono" style="color:var(--sub)" id="fsLabel">d1a4f801 · 80 CARAS</span>
     <button class="rnd-btn" style="height:30px;font-size:8.5px" onclick="randomizeCurrent()">🎲 AZAR</button>
+    <button class="rnd-btn" style="height:30px;font-size:8.5px" onclick="shareEntity()">↗ COMPARTIR</button>
     <button class="rnd-btn" style="height:30px;font-size:8.5px;background:var(--ink);color:#040409;font-weight:700" onclick="toggleHoldFullscreen(false)">SALIR ✕</button>
   </div>
 
@@ -362,6 +364,7 @@
       </div>
 
       <div class="action-row">
+        <button class="btn-sec" onclick="shareEntity()">↗ COMPARTIR</button>
         <button class="btn-sec" onclick="copyRecipe()">COPIAR JSON</button>
         <button class="btn-main" onclick="setView('batch')">VER LOTE (12) →</button>
       </div>
@@ -568,7 +571,9 @@ function generateEntityFromSeed(seed,status){
   return ent;
 }
 
-let currentEntity=generateEntityFromSeed(randomHexId(),'working');
+// Shared link: ?<seed> (404.html turns /poly-orb/<seed> into this)
+const urlSeed=decodeURIComponent(location.search.slice(1)).trim().slice(0,64);
+let currentEntity=generateEntityFromSeed(urlSeed||randomHexId(),'working');
 currentEntity.seed=encodeEntitySeed(currentEntity);
 let batch=[];
 let currentView='lab';
@@ -829,6 +834,7 @@ function renderControls(){
   document.getElementById('syncSeed').textContent=ent.seed;
   document.getElementById('syncSpec').textContent=`${fMeta.faces} CARAS · ${ent.satellites} SAT · ${ent.rings} ANILLOS`;
   document.getElementById('fsLabel').textContent=`${ent.seed} · ${fMeta.faces} CARAS · ${fMeta.name}`;
+  history.replaceState(null,'','?'+encodeURIComponent(ent.seed));
   document.getElementById('facesVal').textContent=`${fMeta.faces} CARAS · ${fMeta.name}`;
   document.getElementById('facesSlider').value=fIdx>=0?fIdx:8;
   document.getElementById('palName').textContent=ent.palName||'PERSONALIZADA';
@@ -891,6 +897,12 @@ function randomizeCurrent(){
   currentEntity=generateEntityFromSeed(randomHexId(),currentEntity.status);
   currentEntity.poke=1.0;
   renderControls();
+}
+function shareEntity(){
+  const url=location.origin+location.pathname+'?'+encodeURIComponent(currentEntity.seed);
+  if(navigator.share){navigator.share({title:'Poly Orb',url}).catch(()=>{});return;}
+  if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
+  showToast('ENLACE COPIADO');
 }
 function copyRecipe(){
   const e=currentEntity;

@@ -10,6 +10,7 @@ Every reload generates a new organic 3D entity with its own geometry, color pale
 
 - **19 Exact 3D Solids (`4` to `80` faces):** Scrub continuously from a Tetrahedron (`4`), Hexahedron (`6`), Octahedron (`8`), Dodecahedron (`12`), and Icosahedron (`20`) through brilliant-cut crystals/gems (`10–72`) up to an 80-face geodesic organic polyform.
 - **Reversible DNA Seed:** Changing faces, palette/custom color, satellites, orbital rings, or organic breathing updates the seed live (e.g. `20c-3ff0c4-5s-2r-55m`). Paste any DNA seed back to reconstruct the exact entity, or enter any arbitrary ID/hash to generate one deterministically.
+- **Shareable links:** `↗ COMPARTIR` shares `https://enguicode.github.io/poly-orb/?<seed>`; `/poly-orb/<seed>` also works (redirected by `404.html`).
 - **Tactile 3D Physics:** Drag to spin in 3D with inertia, tap to trigger a reactive shockwave & satellite impulse, and long-press (or click `⛶ MANTENER`) for fullscreen presentation mode.
 - **1:1 Icon Scale Preview:** Live real-time rendering of the exact same 3D entity at `42px`, `30px`, and `22px` avatar scales.
 - **Reactive States:** Preview distinct visual behaviors without altering the entity's identity:
