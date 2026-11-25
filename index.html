@@ -111,7 +111,6 @@
     border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.75);
   }
   .shell.fullscreen-hold .fs-bar { display: flex; }
-  .shell.fullscreen-hold .stage-badge { display: none; }
   .fs-bar { width: max-content; max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center; border-radius: 22px; padding: 9px 10px; }
   .fs-bar > * { white-space: nowrap; }
   .fs-bar > #fsLabel { flex-basis: 100%; text-align: center; white-space: normal; overflow-wrap: anywhere; padding: 2px 4px 4px; }
@@ -149,12 +148,6 @@
     cursor: grab; touch-action: none;
   }
   #heroCanvas:active { cursor: grabbing; }
-  .stage-badge {
-    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-    pointer-events: none; padding: 4px 11px; border-radius: 999px;
-    background: rgba(8,9,16,0.68); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.12); color: var(--sub); font-size: 7.8px; white-space: nowrap;
-  }
 
   /* 1:1 Avatar Scale Preview Strip */
   .sync-strip {
@@ -167,7 +160,6 @@
     display: block; border-radius: 50%; cursor: pointer; flex-shrink: 0;
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
   }
-  .sync-sizes { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
 
   /* Mobile Sliders & Pickers Scroll */
   .controls-scroll {
@@ -180,57 +172,57 @@
     border: 1px solid var(--line); display: flex; flex-direction: column; gap: 9px;
   }
   .ctrl-head { display: flex; justify-content: space-between; align-items: center; }
-  .ctrl-lbl { color: var(--sub); font-size: 8.2px; }
-  .ctrl-val { color: var(--ink); font-size: 8.5px; }
-
-  .seed-row { display: flex; gap: 7px; }
-  .seed-in {
-    flex: 1; min-width: 0; height: 36px; border-radius: 12px; border: 1px solid var(--line);
-    background: #07080f; color: var(--ink); padding: 0 11px; font-family: var(--mono); font-size: 12px; outline: none;
+  .ctrl-lbl { color: var(--sub); font: 500 12.5px var(--sans); }
+  .ctrl-val { color: var(--ink); font: 600 12px var(--mono); }
+  .grp-title { color: var(--ink); font: 700 11px var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+  .sep { height: 1px; background: var(--line); margin: 3px 0; }
+  .ticks { display: flex; justify-content: space-between; color: var(--sub); font: 500 10.5px var(--sans); }
+  .seed-code {
+    width: 100%; background: transparent; border: none; border-bottom: 1px solid transparent; outline: none; padding: 0;
+    color: var(--ink); font: 700 15px var(--mono); letter-spacing: 0.06em;
   }
-  .seed-in:focus { border-color: rgba(255,255,255,0.36); }
-
-  .poly-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-  .poly-btn {
-    padding: 8px 4px; border-radius: 12px; border: 1px solid var(--line);
-    background: rgba(255,255,255,0.03); color: var(--sub);
-    font-family: var(--mono); font-size: 7.8px; cursor: pointer; text-align: center; transition: all 0.18s;
+  .seed-code:focus { border-bottom-color: rgba(255,255,255,0.36); }
+  .seed-sub { color: var(--sub); font: 500 11.5px var(--sans); margin-top: 2px; }
+  .share-btn {
+    flex-shrink: 0; padding: 9px 14px; border-radius: 999px; border: none; cursor: pointer;
+    background: var(--ink); color: #040409; font: 700 12.5px var(--sans);
   }
-  .poly-btn.on { background: var(--ink); color: #040409; border-color: var(--ink); font-weight: 700; }
+  input[type=range].hue-range {
+    -webkit-appearance: none; appearance: none; height: 26px; border-radius: 13px; border: 1px solid var(--line);
+    background: linear-gradient(90deg, hsl(0 90% 65%), hsl(60 90% 65%), hsl(120 90% 65%), hsl(180 90% 65%), hsl(240 90% 65%), hsl(300 90% 65%), hsl(360 90% 65%));
+  }
+  .hue-range::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 30px; height: 30px; border-radius: 50%; border: 3px solid #fff;
+    background: var(--thumb, #fff); box-shadow: 0 2px 8px rgba(0,0,0,0.65); cursor: grab;
+  }
+  .hue-range::-moz-range-thumb {
+    width: 24px; height: 24px; border-radius: 50%; border: 3px solid #fff;
+    background: var(--thumb, #fff); box-shadow: 0 2px 8px rgba(0,0,0,0.65); cursor: grab;
+  }
 
-  .swatch-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+
+  .swatch-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .sw-dot {
     width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer;
     box-shadow: 0 0 12px color-mix(in srgb, var(--c) 45%, transparent); transition: transform 0.18s;
   }
   .sw-dot:hover { transform: scale(1.12); }
   .sw-dot.on { border-color: #ffffff; transform: scale(1.14); }
-  .color-native {
-    width: 28px; height: 28px; border-radius: 50%; border: 1px dashed rgba(255,255,255,0.4);
-    background: transparent; cursor: pointer; padding: 0; overflow: hidden;
-  }
 
   .slider-row { display: flex; flex-direction: column; gap: 4px; }
   input[type=range] { width: 100%; accent-color: #f5f6fc; height: 4px; cursor: pointer; }
 
-  .state-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; }
+  .state-row {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 3px;
+    border-radius: 14px; background: rgba(255,255,255,0.05); border: 1px solid var(--line);
+  }
   .st-btn {
-    padding: 7px 3px; border-radius: 10px; border: 1px solid var(--line);
-    background: rgba(255,255,255,0.03); color: var(--sub);
-    font-family: var(--mono); font-size: 7.5px; cursor: pointer;
+    padding: 8px 2px; border-radius: 11px; border: none; background: transparent; color: var(--sub);
+    font: 500 12px var(--sans); cursor: pointer; white-space: nowrap;
   }
-  .st-btn.on { border-color: var(--sc); background: color-mix(in srgb, var(--sc) 20%, transparent); color: var(--sc); font-weight: 700; }
+  .st-btn.on { background: var(--ink); color: #040409; font-weight: 700; }
 
-  .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .action-row .btn-main { grid-column: 1 / -1; }
-  .btn-main {
-    padding: 11px; border-radius: 14px; border: none; background: var(--ink); color: #040409;
-    font-family: var(--mono); font-weight: 700; font-size: 8.8px; cursor: pointer;
-  }
-  .btn-sec {
-    padding: 11px; border-radius: 14px; border: 1px solid var(--line); background: rgba(255,255,255,0.06);
-    color: var(--ink); font-family: var(--mono); font-size: 8.8px; cursor: pointer;
-  }
 
   /* VIEW 2: 12-ENTITY RANDOM BATCH GRID (MOBILE 3x4) */
   .batch-head {
@@ -290,83 +282,56 @@
     <div class="lab-left">
       <div class="hero-stage">
         <canvas id="heroCanvas"></canvas>
-        <div class="mono stage-badge">TOCA · ARRASTRA · MANTÉN PULSADO PARA PANTALLA COMPLETA</div>
       </div>
 
       <!-- Live 1:1 Profile Icon Coincidence Preview -->
       <div class="sync-strip">
         <div class="sync-left">
           <canvas class="avatar-canvas" id="syncAv42" width="84" height="84" style="width:42px;height:42px" title="Toca para reaccionar"></canvas>
-          <div style="min-width:0">
-            <div class="mono" style="font-size:11px;font-weight:700;color:var(--ink)" id="syncSeed">d1a4f801</div>
-            <div class="mono" style="font-size:7.5px;color:var(--sub);margin-top:2px" id="syncSpec">80 CARAS · 3 SAT · 2 ANILLOS</div>
+          <div style="min-width:0;flex:1">
+            <input class="seed-code" id="seedInput" spellcheck="false" autocomplete="off" aria-label="Código de la figura" title="Pega un código para cargar su figura">
+            <div class="seed-sub" id="syncSpec"></div>
           </div>
         </div>
-        <div class="sync-sizes">
-          <canvas class="avatar-canvas" id="syncAv30" width="60" height="60" style="width:30px;height:30px"></canvas>
-          <canvas class="avatar-canvas" id="syncAv22" width="44" height="44" style="width:22px;height:22px"></canvas>
-        </div>
+        <button class="share-btn" onclick="shareEntity()">↗ Compartir</button>
       </div>
     </div>
 
     <!-- Sliders & Pickers -->
     <div class="controls-scroll">
       <div class="ctrl-card">
-        <div class="ctrl-head">
-          <span class="mono ctrl-lbl">SEMILLA / ID ALGORÍTMICO</span>
-          <span class="mono ctrl-val" id="seedHash">#D1A4</span>
-        </div>
-        <div class="seed-row">
-          <input class="seed-in" id="seedInput" value="d1a4f801" placeholder="Introduce cualquier ID…" spellcheck="false">
-          <button class="rnd-btn" onclick="applySeed()">GENERAR</button>
-        </div>
-      </div>
-
-      <div class="ctrl-card">
+        <span class="grp-title">Cuerpo</span>
         <div class="slider-row">
-          <div class="ctrl-head">
-            <span class="mono ctrl-lbl">N.º DE CARAS DEL SÓLIDO 3D</span>
-            <span class="mono ctrl-val" id="facesVal">80 CARAS · POLIFORMA</span>
-          </div>
-          <input type="range" id="facesSlider" min="0" max="18" step="1" value="18">
-          <div style="display:flex;justify-content:space-between;color:var(--sub);font-size:7.2px" class="mono">
-            <span>4 (TETRA)</span><span>12</span><span>20 (ICOSA)</span><span>48</span><span>80</span>
-          </div>
+          <div class="ctrl-head"><span class="ctrl-lbl">Forma</span><span class="ctrl-val" id="facesVal"></span></div>
+          <input type="range" id="facesSlider" min="0" max="18" step="1" value="18" aria-label="Forma">
+          <div class="ticks"><span>Tetraedro</span><span>Poliforma</span></div>
         </div>
-      </div>
-
-      <div class="ctrl-card">
-        <div class="ctrl-head">
-          <span class="mono ctrl-lbl">PALETA CROMÁTICA</span>
-          <span class="mono ctrl-val" id="palName">ÁMBAR SOLAR</span>
-        </div>
+        <div class="sep"></div>
+        <div class="ctrl-head"><span class="ctrl-lbl">Color</span><span class="ctrl-val" id="palName"></span></div>
         <div class="swatch-row" id="swatchRow"></div>
-      </div>
-
-      <div class="ctrl-card">
+        <input type="range" id="hueSlider" class="hue-range" min="0" max="359" step="1" aria-label="Color libre">
+        <div class="sep"></div>
         <div class="slider-row">
-          <div class="ctrl-head"><span class="mono ctrl-lbl">SATÉLITES ORBITALES</span><span class="mono ctrl-val" id="satVal">3</span></div>
-          <input type="range" id="satSlider" min="0" max="5" step="1" value="3">
-        </div>
-        <div class="slider-row">
-          <div class="ctrl-head"><span class="mono ctrl-lbl">ANILLOS DE ÓRBITA</span><span class="mono ctrl-val" id="ringVal">2</span></div>
-          <input type="range" id="ringSlider" min="0" max="3" step="1" value="2">
-        </div>
-        <div class="slider-row">
-          <div class="ctrl-head"><span class="mono ctrl-lbl">RESPIRACIÓN / POLIFORMA ORGÁNICA</span><span class="mono ctrl-val" id="morphVal">55%</span></div>
-          <input type="range" id="morphSlider" min="0" max="100" step="5" value="55">
+          <div class="ctrl-head"><span class="ctrl-lbl">Respiración</span><span class="ctrl-val" id="morphVal"></span></div>
+          <input type="range" id="morphSlider" min="0" max="100" step="1" aria-label="Respiración">
         </div>
       </div>
 
       <div class="ctrl-card">
-        <div class="ctrl-head"><span class="mono ctrl-lbl">COMPORTAMIENTO POR ESTADO</span></div>
+        <span class="grp-title">Órbita</span>
+        <div class="slider-row">
+          <div class="ctrl-head"><span class="ctrl-lbl">Satélites</span><span class="ctrl-val" id="satVal"></span></div>
+          <input type="range" id="satSlider" min="0" max="5" step="1" aria-label="Satélites">
+        </div>
+        <div class="slider-row">
+          <div class="ctrl-head"><span class="ctrl-lbl">Anillos</span><span class="ctrl-val" id="ringVal"></span></div>
+          <input type="range" id="ringSlider" min="0" max="3" step="1" aria-label="Anillos">
+        </div>
+      </div>
+
+      <div class="ctrl-card">
+        <span class="ctrl-lbl">Vista previa de estado</span>
         <div class="state-row" id="stateRow"></div>
-      </div>
-
-      <div class="action-row">
-        <button class="btn-sec" onclick="shareEntity()">↗ COMPARTIR</button>
-        <button class="btn-sec" onclick="copyRecipe()">COPIAR JSON</button>
-        <button class="btn-main" onclick="setView('batch')">VER LOTE (12) →</button>
       </div>
     </div>
   </section>
@@ -842,9 +807,7 @@ function toggleMobilePreview(){
   requestAnimationFrame(()=>sizeHero());
   setTimeout(sizeHero,310);
 }
-['syncAv42','syncAv30','syncAv22'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',()=>{currentEntity.poke=1.0;showToast('REACCIÓN SINCRONIZADA 1:1');});
-});
+document.getElementById('syncAv42').addEventListener('click',()=>{currentEntity.poke=1.0;});
 
 function setView(v){
   currentView=v;
@@ -859,29 +822,43 @@ function renderControls(){
   const ent=currentEntity;
   const fMeta=getFaceMeta(ent.faces);
   const fIdx=FACE_STEPS.findIndex(s=>s.faces===fMeta.faces);
-  document.getElementById('seedInput').value=ent.seed;
-  document.getElementById('seedHash').textContent='#'+hashStr(ent.seed).toString(16).slice(0,4).toUpperCase();
-  document.getElementById('syncSeed').textContent=ent.seed;
-  document.getElementById('syncSpec').textContent=`${fMeta.faces} CARAS · ${ent.satellites} SAT · ${ent.rings} ANILLOS`;
+  const title=s=>s.charAt(0)+s.slice(1).toLowerCase();
+  const pal=PALETTES.find(p=>p.primary===ent.primary&&p.secondary===ent.secondary);
+  if(document.activeElement!==document.getElementById('seedInput'))document.getElementById('seedInput').value=ent.seed;
+  document.getElementById('syncSpec').textContent=`${title(fMeta.name)} · ${ent.satellites} satélite${ent.satellites===1?'':'s'} · ${ent.rings} anillo${ent.rings===1?'':'s'}`;
   document.getElementById('fsLabel').textContent=`${ent.seed} · ${fMeta.faces} CARAS · ${fMeta.name}`;
   history.replaceState(null,'','?seed='+encodeURIComponent(ent.seed));
-  document.getElementById('facesVal').textContent=`${fMeta.faces} CARAS · ${fMeta.name}`;
+  document.getElementById('facesVal').textContent=`${fMeta.faces} caras · ${title(fMeta.name)}`;
   document.getElementById('facesSlider').value=fIdx>=0?fIdx:8;
-  document.getElementById('palName').textContent=ent.palName||'PERSONALIZADA';
+  document.getElementById('palName').textContent=pal?title(pal.name):ent.primary.toUpperCase();
   document.getElementById('satSlider').value=ent.satellites;
   document.getElementById('satVal').textContent=ent.satellites;
   document.getElementById('ringSlider').value=ent.rings;
   document.getElementById('ringVal').textContent=ent.rings;
   document.getElementById('morphSlider').value=ent.morph;
-  document.getElementById('morphVal').textContent=ent.morph+'%';
+  document.getElementById('morphVal').textContent=ent.morph+' %';
+  const hue=document.getElementById('hueSlider');
+  if(document.activeElement!==hue)hue.value=hexHue(ent.primary);
+  hue.style.setProperty('--thumb',ent.primary);
 
   document.getElementById('swatchRow').innerHTML=PALETTES.map(p=>
-    `<button class="sw-dot ${ent.primary.toLowerCase()===p.primary.toLowerCase()?'on':''}" style="--c:${p.primary};background:linear-gradient(135deg,${p.core},${p.primary} 55%,${p.secondary})" title="${p.name}" onclick="setPalette('${p.id}')"></button>`
-  ).join('')+`<input type="color" class="color-native" value="${ent.primary}" title="Color libre" oninput="setCustomColor(this.value)">`;
+    `<button class="sw-dot ${pal===p?'on':''}" style="--c:${p.primary};background:linear-gradient(135deg,${p.core},${p.primary} 55%,${p.secondary})" title="${title(p.name)}" aria-label="${title(p.name)}" onclick="setPalette('${p.id}')"></button>`
+  ).join('');
 
   document.getElementById('stateRow').innerHTML=Object.entries(STATUS_META).map(([k,m])=>
-    `<button class="st-btn ${ent.status===k?'on':''}" style="--sc:${m.color}" onclick="setStatus('${k}')">${m.label}</button>`
+    `<button class="st-btn ${ent.status===k?'on':''}" onclick="setStatus('${k}')">${title(m.label)}</button>`
   ).join('');
+}
+function hexHue(hex){
+  const [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255),mx=Math.max(r,g,b),d=mx-Math.min(r,g,b);
+  if(!d)return 0;
+  const h=mx===r?((g-b)/d)%6:mx===g?(b-r)/d+2:(r-g)/d+4;
+  return Math.round((h*60+360)%360);
+}
+function hueHex(h){
+  // Same s/l as the .hue-range gradient, so the thumb shows the exact color picked.
+  const s=0.9,l=0.65,a=s*Math.min(l,1-l),f=n=>{const k=(n+h/30)%12;return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1))));};
+  return '#'+[0,8,4].map(n=>f(n).toString(16).padStart(2,'0')).join('');
 }
 
 function renderBatch(){
@@ -917,7 +894,8 @@ function setPalette(id){
 function setCustomColor(hex){currentEntity.primary=hex;currentEntity.secondary=hex;currentEntity.core='#ffffff';currentEntity.palName=hex.toUpperCase();currentEntity.poke=0.6;syncSeedFromParams();renderControls();}
 function setStatus(st){currentEntity.status=st;batch.forEach(b=>b.status=st);currentEntity.poke=0.9;renderControls();}
 function applySeed(){
-  const s=document.getElementById('seedInput').value.trim()||randomSeed();
+  const s=document.getElementById('seedInput').value.trim();
+  if(!s||s===currentEntity.seed){renderControls();return;}
   currentEntity=generateEntityFromSeed(s,currentEntity.status);
   currentEntity.poke=1.0;
   renderControls();showToast('GENERADO DESDE SEMILLA');
@@ -934,13 +912,6 @@ function shareEntity(){
   if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
   showToast('ENLACE COPIADO');
 }
-function copyRecipe(){
-  const e=currentEntity;
-  const json=JSON.stringify({seed:e.seed,faces:e.faces,primary:e.primary,secondary:e.secondary,satellites:e.satellites,rings:e.rings,morph:e.morph,status:e.status},null,2);
-  if(navigator.clipboard)navigator.clipboard.writeText(json).catch(()=>{});
-  showToast('RECETA JSON COPIADA');
-}
-
 document.getElementById('facesSlider').oninput=e=>{
   const step=FACE_STEPS[Number(e.target.value)]||FACE_STEPS[8];
   currentEntity.faces=step.faces;
@@ -952,6 +923,9 @@ document.getElementById('facesSlider').oninput=e=>{
 document.getElementById('satSlider').oninput=e=>{currentEntity.satellites=Number(e.target.value);syncSeedFromParams();renderControls();};
 document.getElementById('ringSlider').oninput=e=>{currentEntity.rings=Number(e.target.value);syncSeedFromParams();renderControls();};
 document.getElementById('morphSlider').oninput=e=>{currentEntity.morph=Number(e.target.value);syncSeedFromParams();renderControls();};
+document.getElementById('hueSlider').oninput=e=>setCustomColor(hueHex(Number(e.target.value)));
+document.getElementById('seedInput').onchange=applySeed;
+document.getElementById('seedInput').onkeydown=e=>{if(e.key==='Enter')e.target.blur();};
 
 let tt;function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000);}
 
@@ -970,10 +944,7 @@ function tick(now){
 
   if(currentView==='lab'){
     drawLivingEntity(heroCanvas.getContext('2d'),currentEntity,heroCanvas.clientWidth,heroCanvas.clientHeight,t,false);
-    [['syncAv42',84],['syncAv30',60],['syncAv22',44]].forEach(([id,sz])=>{
-      const c=document.getElementById(id);
-      drawLivingEntity(c.getContext('2d'),currentEntity,sz,sz,t,true);
-    });
+    drawLivingEntity(document.getElementById('syncAv42').getContext('2d'),currentEntity,84,84,t,true);
   } else {
     document.querySelectorAll('.b-cv').forEach(c=>{
       const ent=batch[Number(c.dataset.i)];
