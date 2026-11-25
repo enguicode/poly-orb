@@ -2,7 +2,7 @@
 <meta charset="UTF-8">
 <title>Poly Orb</title>
 <script>
-// GitHub Pages: /poly-orb/<seed> → /poly-orb/?<seed>
+// GitHub Pages: /poly-orb/<seed> → /poly-orb/?seed=<seed>
 const m=location.pathname.match(/^\/poly-orb\/([^/]+)\/?$/);
-location.replace('/poly-orb/'+(m?'?'+m[1]:''));
+location.replace('/poly-orb/'+(m?'?seed='+m[1]:''));
 </script>

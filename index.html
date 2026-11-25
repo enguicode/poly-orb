@@ -571,8 +571,9 @@ function generateEntityFromSeed(seed,status){
   return ent;
 }
 
-// Shared link: ?<seed> (404.html turns /poly-orb/<seed> into this)
-const urlSeed=decodeURIComponent(location.search.slice(1)).trim().slice(0,64);
+// Shared link: ?seed=<seed> (bare ?<seed> from older links; 404.html turns /poly-orb/<seed> into this)
+const qs=new URLSearchParams(location.search);
+const urlSeed=(qs.get('seed')||[...qs.keys()][0]||'').trim().slice(0,64);
 let currentEntity=generateEntityFromSeed(urlSeed||randomHexId(),'working');
 currentEntity.seed=encodeEntitySeed(currentEntity);
 let batch=[];
@@ -834,7 +835,7 @@ function renderControls(){
   document.getElementById('syncSeed').textContent=ent.seed;
   document.getElementById('syncSpec').textContent=`${fMeta.faces} CARAS · ${ent.satellites} SAT · ${ent.rings} ANILLOS`;
   document.getElementById('fsLabel').textContent=`${ent.seed} · ${fMeta.faces} CARAS · ${fMeta.name}`;
-  history.replaceState(null,'','?'+encodeURIComponent(ent.seed));
+  history.replaceState(null,'','?seed='+encodeURIComponent(ent.seed));
   document.getElementById('facesVal').textContent=`${fMeta.faces} CARAS · ${fMeta.name}`;
   document.getElementById('facesSlider').value=fIdx>=0?fIdx:8;
   document.getElementById('palName').textContent=ent.palName||'PERSONALIZADA';
@@ -899,7 +900,7 @@ function randomizeCurrent(){
   renderControls();
 }
 function shareEntity(){
-  const url=location.origin+location.pathname+'?'+encodeURIComponent(currentEntity.seed);
+  const url=location.origin+location.pathname+'?seed='+encodeURIComponent(currentEntity.seed);
   if(navigator.share){navigator.share({title:'Poly Orb',url}).catch(()=>{});return;}
   if(navigator.clipboard)navigator.clipboard.writeText(url).catch(()=>{});
   showToast('ENLACE COPIADO');
