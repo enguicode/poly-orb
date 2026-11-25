@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Poly Orb — Generador de Entes Polifórmicos 3D</title>
+<meta name="description" content="Genera entes 3D vivos: poliedros con satélites, anillos y respiración, cada uno con su semilla de ADN.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://enguicode.github.io/poly-orb/">
+<meta property="og:title" content="Poly Orb — Generador de Entes Polifórmicos 3D">
+<meta property="og:description" content="Genera entes 3D vivos: poliedros con satélites, anillos y respiración, cada uno con su semilla de ADN.">
+<meta property="og:image" content="https://enguicode.github.io/poly-orb/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -100,7 +111,10 @@
     border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 18px 50px rgba(0, 0, 0, 0.75);
   }
   .shell.fullscreen-hold .fs-bar { display: flex; }
-  .shell.fullscreen-hold .stage-badge { bottom: 78px; }
+  .shell.fullscreen-hold .stage-badge { display: none; }
+  .fs-bar { max-width: calc(100% - 24px); }
+  .fs-bar > * { white-space: nowrap; flex-shrink: 0; }
+  .fs-bar > #fsLabel { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .lab-left { display: flex; flex-direction: column; flex-shrink: 0; }
   .mono { font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.11em; font-size: 8.8px; }
 
