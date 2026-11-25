@@ -520,15 +520,45 @@ const STATUS_META={
 };
 
 function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
-function randomHexId(){return Array.from({length:8},()=>Math.floor(Math.random()*16).toString(16)).join('');}
-
-function encodeEntitySeed(ent){
-  const hex=String(ent.primary||'#ffb84d').replace('#','').toLowerCase();
-  return `${ent.faces}c-${hex}-${ent.satellites}s-${ent.rings}r-${ent.morph}m`;
+// Seed = 10 hex chars, a reversible mixed-radix number:
+// faces step (19) · satellites 0-5 · rings 0-3 · morph 0-100 · color (8 palettes, then any exact #rrggbb).
+const SEED_RADIX=[19,6,4,101];
+const SEED_COLORS=PALETTES.length+0x1000000;
+// Invertible scramble mod 2^40 (odd multiplier, then xor) so nearby figures get unrelated-looking codes.
+const SEED_BITS=40n,SEED_MASK=(1n<<SEED_BITS)-1n,SEED_MUL=0x9e3779b97fn,SEED_XOR=0x5bd1e99547n;
+const SEED_MUL_INV=[0,1,2,3,4,5].reduce(x=>(x*(2n-SEED_MUL*x))&SEED_MASK,SEED_MUL);
+function encodeSeed(ent){
+  const pi=PALETTES.findIndex(p=>p.primary===ent.primary&&p.secondary===ent.secondary);
+  const color=pi>=0?pi:PALETTES.length+parseInt(ent.primary.slice(1),16);
+  const fi=Math.max(0,FACE_STEPS.findIndex(st=>st.faces===ent.faces));
+  let n=color;
+  [ent.morph,ent.rings,ent.satellites,fi].forEach((v,i)=>{n=n*SEED_RADIX[3-i]+v;});
+  return (((BigInt(n)*SEED_MUL)&SEED_MASK)^SEED_XOR).toString(16).padStart(10,'0');
 }
+function decodeSeed(hex,status){
+  let n=Number(((BigInt('0x'+hex)^SEED_XOR)*SEED_MUL_INV)&SEED_MASK);
+  const [fi,sat,rings,morph]=SEED_RADIX.map(rad=>{const v=n%rad;n=Math.floor(n/rad);return v;});
+  const color=n%SEED_COLORS;
+  const pal=PALETTES[color];
+  const primary=pal?pal.primary:'#'+(color-PALETTES.length).toString(16).padStart(6,'0');
+  return {
+    seed:hex.toLowerCase(),faces:FACE_STEPS[fi].faces,
+    primary,secondary:pal?pal.secondary:primary,core:pal?pal.core:'#ffffff',palName:pal?pal.name:primary.toUpperCase(),
+    satellites:sat,rings,morph,status:status||'waiting',
+    rotX:0.35,rotY:(parseInt(hex.slice(-6),16)%314)/100,velX:0,velY:0,poke:0
+  };
+}
+function randomSeed(){return encodeSeed(entityFromText(Math.random().toString(36).slice(2)));}
 
 function generateEntityFromSeed(seed,status){
   const raw=(seed||'').trim()||'d1a4f801';
+  if(/^[0-9a-f]{10}$/i.test(raw))return decodeSeed(raw,status);
+  const ent=entityFromText(raw,status);
+  ent.seed=encodeSeed(ent);
+  return ent;
+}
+// Older links ("32c-a87bff-5s-1r-38m") and any free text still open a figure; the shown seed becomes the 10-hex one.
+function entityFromText(raw,status){
   // 1) Reversible structured DNA seed: e.g. "80c-ffb84d-3s-2r-55m"
   const m=raw.match(/^(\d+)c-([0-9a-f]{6})-(\d+)s-(\d+)r-(\d+)m$/i);
   if(m){
@@ -537,7 +567,7 @@ function generateEntityFromSeed(seed,status){
     const hex='#'+m[2].toLowerCase();
     const pal=PALETTES.find(p=>p.primary.toLowerCase()===hex);
     return {
-      seed:raw.toLowerCase(),
+      seed:raw,
       faces:closest.faces,
       primary:hex,
       secondary:pal?pal.secondary:hex,
@@ -574,8 +604,7 @@ function generateEntityFromSeed(seed,status){
 // Shared link: ?seed=<seed> (bare ?<seed> from older links; 404.html turns /poly-orb/<seed> into this)
 const qs=new URLSearchParams(location.search);
 const urlSeed=(qs.get('seed')||[...qs.keys()][0]||'').trim().slice(0,64);
-let currentEntity=generateEntityFromSeed(urlSeed||randomHexId(),'working');
-currentEntity.seed=encodeEntitySeed(currentEntity);
+let currentEntity=generateEntityFromSeed(urlSeed||randomSeed(),'working');
 let batch=[];
 let currentView='lab';
 
@@ -866,7 +895,7 @@ function renderBatch(){
 }
 
 function generateBatch(){
-  batch=Array.from({length:12},()=>generateEntityFromSeed(randomHexId(),currentEntity.status));
+  batch=Array.from({length:12},()=>generateEntityFromSeed(randomSeed(),currentEntity.status));
   renderBatch();
 }
 function pickBatch(i){
@@ -877,7 +906,7 @@ function pickBatch(i){
   setView('lab');
 }
 function syncSeedFromParams(){
-  currentEntity.seed=encodeEntitySeed(currentEntity);
+  currentEntity.seed=encodeSeed(currentEntity);
 }
 function setPalette(id){
   const p=PALETTES.find(x=>x.id===id);if(!p)return;
@@ -888,14 +917,14 @@ function setPalette(id){
 function setCustomColor(hex){currentEntity.primary=hex;currentEntity.secondary=hex;currentEntity.core='#ffffff';currentEntity.palName=hex.toUpperCase();currentEntity.poke=0.6;syncSeedFromParams();renderControls();}
 function setStatus(st){currentEntity.status=st;batch.forEach(b=>b.status=st);currentEntity.poke=0.9;renderControls();}
 function applySeed(){
-  const s=document.getElementById('seedInput').value.trim()||randomHexId();
+  const s=document.getElementById('seedInput').value.trim()||randomSeed();
   currentEntity=generateEntityFromSeed(s,currentEntity.status);
   currentEntity.poke=1.0;
   renderControls();showToast('GENERADO DESDE SEMILLA');
 }
 function randomizeCurrent(){
   if(currentView==='batch'){generateBatch();showToast('12 NUEVOS ENTES');return;}
-  currentEntity=generateEntityFromSeed(randomHexId(),currentEntity.status);
+  currentEntity=generateEntityFromSeed(randomSeed(),currentEntity.status);
   currentEntity.poke=1.0;
   renderControls();
 }
@@ -955,6 +984,7 @@ function tick(now){
 }
 
 generateBatch();
+console.assert(batch.every(e=>encodeSeed(decodeSeed(e.seed))===e.seed),'seed round-trip');
 renderControls();
 requestAnimationFrame(tick);
 </script>
