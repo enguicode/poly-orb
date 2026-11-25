@@ -2,6 +2,8 @@
 
 Interactive, zero-dependency 3D living polyhedron & orbital satellite generator built with pure HTML5 Canvas and custom 3D projection math.
 
+**Live demo:** <https://enguicode.github.io/poly-orb/>
+
 Every reload generates a new organic 3D entity with its own geometry, color palette, orbital satellites, rings, and breathing cadence — encoded in a reversible DNA seed.
 
 ## Features
