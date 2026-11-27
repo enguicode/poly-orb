@@ -20,6 +20,18 @@ Every reload generates a new organic 3D entity with its own geometry, color pale
 - **Random Batch Explorer (`LOTE AZAR (12)`):** Inspect 12 simultaneously animated random entities and pick any to fine-tune.
 - **Responsive Mobile & Desktop UI:** Adapts smoothly between a `412×915` mobile frame and a two-column desktop studio, with a `MÓVIL / PC` preview toggle. Controls are grouped into **Cuerpo** (shape, color with palettes and a free hue bar, breathing) and **Órbita** (satellites, rings), with the code and `↗ Compartir` in one bar.
 
+## As a library (`poly-orb.js`)
+
+The generator lives in `poly-orb.js`, an ES module with no dependencies and no DOM lookups; `index.html` imports it. Copy the file into another app:
+
+```js
+import { generateEntityFromSeed, drawLivingEntity, stepEntity } from './poly-orb.js';
+const ent = generateEntityFromSeed(sessionId, 'working'); // any text or a 10-hex seed
+// each frame: stepEntity(ent, dt, t); drawLivingEntity(ctx, ent, w, h, t, mini);
+```
+
+States: `working`, `waiting`, `blocked`, `resting`. The same text always gives the same figure.
+
 ## Usage
 
 No build step or dependencies required.
